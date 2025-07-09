@@ -1,0 +1,27 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# dataset
+/dataset/tools
+/dataset/validation
+/dataset/train
+
+# VSCode-specific files
+/.VSCodeCounter
+
+# Cache
+/cache/early_stopping
+
+# Tensorboard logs
+/logs/runs
+
+# Models
+/models/*
