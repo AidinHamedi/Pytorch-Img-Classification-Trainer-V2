@@ -38,13 +38,8 @@ def compute_class_weights_one_hot(y: np.ndarray, weighting: str = "linear"):
 
     Intended for computing loss weighting to handle class imbalance in multi-label classification.
     """
-    # Count the number of samples in each class
     class_sample_counts = y.sum(axis=0)
-
-    # Compute the inverse of each class count
     class_weights = 1.0 / class_sample_counts.astype(np.float32)
-
-    # Apply the specified weighting scheme
     if weighting == "square":
         class_weights = np.square(class_weights)
     elif weighting == "none":
@@ -61,11 +56,7 @@ def compute_class_weights_one_hot(y: np.ndarray, weighting: str = "linear"):
         class_weights = np.log(class_weights)
     elif weighting != "linear":
         raise ValueError(f"Unknown weighting scheme '{weighting}'")
-
-    # Normalize the class weights so that they sum to 1
     class_weights_normalized = class_weights / np.sum(class_weights)
-
-    # Return the normalized class weights
     return class_weights_normalized
 
 
@@ -262,7 +253,6 @@ class Torch_ImgDataloader(Dataset):
         transform_timing="post_norm",
         raise_on_error=False,
     ):
-        # Initialize instance variables
         self.data_pairs = data_pairs
         self.backend = backend
         self.color_mode = color_mode
@@ -271,6 +261,7 @@ class Torch_ImgDataloader(Dataset):
         self.dtype = dtype
         self.transform_timing = transform_timing
         self.raise_on_error = raise_on_error
+
         match backend:
             case "opencv":
                 self.load_func = load_image_opencv
@@ -297,21 +288,13 @@ class Torch_ImgDataloader(Dataset):
         if img is None:
             raise ValueError("Image is None, cannot process.")
 
-        # Convert the NumPy array to a PyTorch tensor
         img = torch.from_numpy(img).type(self.dtype, non_blocking=True)
-
-        # Change from HWC to CHW format
         img = img.permute(2, 0, 1)
 
-        # Apply transforms before normalization if specified
         if self.transforms and self.transform_timing == "pre_norm":
             img = self.transforms(img)
-
-        # Normalize pixel values to [0, 1] if specified
         if self.normalize:
             img = img / 255.0
-
-        # Apply transforms after normalization if specified
         if self.transforms and self.transform_timing == "post_norm":
             img = self.transforms(img)
 
@@ -327,9 +310,12 @@ class Torch_ImgDataloader(Dataset):
         img = self.load_func(
             img_path, color_mode=self.color_mode, raise_on_error=self.raise_on_error
         )
+
         if img is None and self.raise_on_error:
             raise ValueError(f"Failed to load image: {img_path}")
+
         img_tensor = self._process_image(img)
+
         return img_tensor, label
 
 
@@ -371,7 +357,6 @@ def make_data_pairs(
             - "num_classes" (int): The total number of classes.
             - "labels" (list): A list of the class label names.
     """
-    # Create one-hot encodings for labels using PyTorch
     label_dirs = os.listdir(train_dir)
     labels = [lable.capitalize() for lable in label_dirs]
     label_to_onehot = {
@@ -379,7 +364,6 @@ def make_data_pairs(
         for i, label in enumerate(label_dirs)
     }
 
-    # Create pairs of [one-hot label, image path]
     data_pairs = []
     for label_dir in label_dirs:
         label_onehot = label_to_onehot[label_dir.capitalize()]
@@ -388,10 +372,8 @@ def make_data_pairs(
             full_path = os.path.join(train_dir, label_dir, img_path)
             data_pairs.append([label_onehot, full_path])
 
-    # Shuffle the pairs
     random.shuffle(data_pairs)
 
-    # Get dataset stats
     num_classes = len(label_dirs)
     image_count = len(data_pairs)
 
@@ -401,16 +383,13 @@ def make_data_pairs(
         eval_pairs = data_pairs[split_idx:]
         del data_pairs
     else:
-        # Verify eval directory exists
         if not os.path.exists(val_dir):
             raise ValueError(f"Evaluation data directory not found: {val_dir}")
 
-        # Verify matching labels
         eval_label_dirs = os.listdir(val_dir)
         if set(eval_label_dirs) != set(label_dirs):
             raise ValueError("Mismatch between training and evaluation labels")
 
-        # Create eval pairs using same label encoding
         eval_pairs = []
         for label_dir in eval_label_dirs:
             label_onehot = label_to_onehot[label_dir.capitalize()]
@@ -422,13 +401,11 @@ def make_data_pairs(
         train_pairs = data_pairs
         del data_pairs
 
-    # Split statistics
     eval_count = len(eval_pairs)
     train_count = len(train_pairs)
     total_count = eval_count + train_count
     split_ratio = train_count / total_count
 
-    # Compute the class weights
     class_weights = torch.from_numpy(
         compute_class_weights_one_hot(
             torch.stack([pair[0] for pair in train_pairs]).numpy(),
