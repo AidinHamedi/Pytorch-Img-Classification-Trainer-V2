@@ -10,6 +10,7 @@ dependencies = [
     "rich>=14.0.0",
     "torch>=2.7.0",
     "torchvision>=0.22.0",
+    "wrapt>=1.17.2",
 ]
 
 [project.optional-dependencies]
