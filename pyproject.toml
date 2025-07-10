@@ -5,10 +5,15 @@ description = "Pytorch Image Classification Trainer"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "opencv-python>=4.12.0.88",
+    "pillow>=11.3.0",
     "rich>=14.0.0",
     "torch>=2.7.0",
     "torchvision>=0.22.0",
 ]
+
+[project.optional-dependencies]
+tjpeg = ["turbojpeg>=0.0.2"]
 
 [[tool.uv.index]]
 name = "pytorch-cu128"
