@@ -44,8 +44,8 @@ def make_augmentor(
     Returns:
         v2_transforms.Compose: A torchvision transform pipeline.
     """
-    if target_magnitude > magnitude_base:
-        raise ValueError("target_magnitude can't be higher than magnitude_base")
+    if magnitude_base > target_magnitude:
+        raise ValueError("magnitude_base can't be higher than target_magnitude")
 
     return v2_transforms.Compose(
         [
