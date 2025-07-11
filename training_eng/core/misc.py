@@ -1,7 +1,8 @@
 import math
-import torch
 import random
-from typing import List, Any, Tuple, Union
+from typing import Any, List, Tuple, Union
+
+import torch
 from torch.utils.data import DataLoader
 
 

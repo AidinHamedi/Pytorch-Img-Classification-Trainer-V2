@@ -189,10 +189,12 @@ def load_image_turbojpeg(
             match color_mode:
                 case "grayscale":
                     img = np.array(
-                        turbojpeg.decompress(fr.read(), pixelformat=turbojpeg.GRAY)
+                        turbojpeg.decompress(fr.read(), pixelformat=turbojpeg.PF.GRAY)
                     )
                 case "rgb":
-                    img = np.array(turbojpeg.decompress(fr.read()))
+                    img = np.array(
+                        turbojpeg.decompress(fr.read(), pixelformat=turbojpeg.PF.RGB)
+                    )
                 case _:
                     raise ValueError(f"Unsupported color mode: {color_mode}")
     except Exception as e:
@@ -251,7 +253,7 @@ class Torch_ImgDataloader(Dataset):
         normalize=True,
         dtype=torch.float32,
         transform_timing="post_norm",
-        raise_on_error=False,
+        raise_on_error=True,
     ):
         self.data_pairs = data_pairs
         self.backend = backend
