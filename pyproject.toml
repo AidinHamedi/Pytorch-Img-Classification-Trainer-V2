@@ -18,6 +18,7 @@ dependencies = [
     "torchinfo>=1.8.0",
     "torchvision>=0.22.0",
     "wrapt>=1.17.2",
+    "triton-windows>=2.1.0; sys_platform == 'win32'",
 ]
 
 [project.optional-dependencies]

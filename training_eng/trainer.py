@@ -189,6 +189,7 @@ def fit(
         mode=early_stopping_cnf["mode"],
         patience=early_stopping_cnf["patience"],
         min_delta=early_stopping_cnf["min_delta"],
+        cache_dir=os.path.join(cache_dir, "early_stopping"),
         verbose=True,
     )
 

@@ -76,11 +76,17 @@ This repository provides a robust and flexible framework for training image clas
     uv sync
     ```
 
+    If you want to use turbojpeg
+
+    ```bash
+    uv sync --extra tjpeg
+    ```
+
 ### Dataset Setup
 
 Place your training and validation datasets in the `dataset/train` and `dataset/validation` directories, respectively. The data should be organized in subdirectories, where each subdirectory represents a class.
 
-```
+``` text
 dataset/
 ├── train/
 │   ├── class_a/
@@ -151,6 +157,11 @@ dataset/
 4. **`training_eng/data_utils`:** These modules handle the creation of data pairs, data loading, and data augmentation.
 5. **`training_eng/train_utils`:** These modules provide utilities for model evaluation and early stopping.
 6. **`training_eng/core`:** These modules provide core functionalities like device management and callback arguments.
+
+## 📷 Example Output
+
+![Img](./docs/Screenshot.png)
+
 
 ## 🤝 Contributing
 

@@ -144,7 +144,7 @@ def train(exper_args: dict):
     )
     optimizer = TP_optim.Lookahead(optimizer, k=5, alpha=0.5, pullback_momentum="none")
 
-    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = nn.CrossEntropyLoss(label_smoothing=0.006)
 
     print("[bold green]Training the model...")
     fit(
@@ -153,17 +153,32 @@ def train(exper_args: dict):
         CallbackWrapper(lambda x: x, default_value=eval_dataloader, constant=True),
         optimizer,
         loss_fn,
-        max_epochs=64,
+        max_epochs=512,
         mixed_precision=True,
         gradient_accumulation=bool(train_gradient_accumulation),
         gradient_accumulation_steps=CallbackWrapper(
-            lambda x: x, default_value=train_gradient_accumulation, constant=True
+            lambda **env_args: min(3, int(env_args["epoch"] / 10) + 1), default_value=train_gradient_accumulation, constant=True
         ),
         early_stopping_cnf={
-            "patience": 8,
+            "patience": 16,
             "monitor": "Cohen's Kappa",
             "mode": "max",
             "min_delta": 0.00001,
+        },
+        lr_scheduler={
+            "scheduler": scheduler.OneCycleLr(
+                optimizer,
+                warmup_iters=6,
+                lr_idling_iters=16,
+                annealing_iters=38,
+                decay_iters=80,
+                max_lr=0.01,
+                annealing_lr_min=0.004,
+                decay_lr_min=0.001,
+                warmup_type="linear",
+            ),
+            "enable": True,
+            "batch_mode": False,
         },
         model_trace_input=torch.randn(1, 3 if img_format == "rgb" else 1, *img_res),
         experiment_name=exper_args["exper_name"],
