@@ -224,7 +224,7 @@ def fit(
                     #     cuda_compile
                     #     and device_str == "cuda"
                     #     and cuda_compile_config.get("backend", "")
-                    #     in ["cudagraphs", "reduce-overhead"]
+                    #     in ["cudagraphs"]
                     # ):
                     #     cudagraph_mark_step_begin()
                     y_pred = model(x.to(device, non_blocking=True))
@@ -334,20 +334,21 @@ def fit(
                     lr_scheduler["scheduler"].get_last_lr()[0],
                     epoch,
                 )
-                if log_debugging:
-                    for name, param in model.named_parameters():
-                        param_tag, param_type = (
-                            ">".join(name.replace(".", ">").split(">")[:-1]),
-                            name.replace(".", ">").split(">")[-1],
+
+            if log_debugging:
+                for name, param in model.named_parameters():
+                    param_tag, param_type = (
+                        ">".join(name.replace(".", ">").split(">")[:-1]),
+                        name.replace(".", ">").split(">")[-1],
+                    )
+                    if param.data.numel() > 0 and not torch.all(
+                        torch.isnan(param.data)
+                    ):
+                        tbw_data.add_histogram(
+                            f"Train-Parameters|>>{param_tag}/{param_type}",
+                            param.data.cpu(),
+                            epoch,
                         )
-                        if param.data.numel() > 0 and not torch.all(
-                            torch.isnan(param.data)
-                        ):
-                            tbw_data.add_histogram(
-                                f"Train-Parameters|>>{param_tag}/{param_type}",
-                                param.data.cpu(),
-                                epoch,
-                            )
 
             tbw_data.add_scalar(
                 "Other/Epoch_time (minutes)",

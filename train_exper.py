@@ -140,7 +140,7 @@ def train(exper_args: dict):
     optimizer = TP_optim.GrokFastAdamW(
         optimizer_params,
         lr=0.01,
-        weight_decay=0.01,
+        weight_decay=0.02,
     )
     optimizer = TP_optim.Lookahead(optimizer, k=5, alpha=0.5, pullback_momentum="none")
 
