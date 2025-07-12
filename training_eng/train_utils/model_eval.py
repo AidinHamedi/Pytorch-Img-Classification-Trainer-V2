@@ -92,7 +92,7 @@ def eval(
     model: torch.nn.Module,
     device: torch.device,
     Progressbar: Progress,
-    loss_fn: Optional[Callable] = None,
+    loss_fn: torch.nn.Module = None,
     return_preds: bool = False,
     verbose: bool = True,
     **kwargs,

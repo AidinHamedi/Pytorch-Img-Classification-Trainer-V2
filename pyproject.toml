@@ -42,3 +42,4 @@ pythonPlatform = "Linux"
 
 reportArgumentType = "none"
 reportPossiblyUnboundVariable = "none"
+reportCallIssue = "none"

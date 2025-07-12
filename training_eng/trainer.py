@@ -3,8 +3,10 @@ import os
 import shutil
 import time
 from contextlib import suppress
+from functools import partial
 
 import numpy as np
+import pytorch_optimizer as po
 import shortuuid
 import torch
 from rich import box
@@ -63,6 +65,7 @@ def fit(
     tensorboard_logs_path: str = "./logs",
     model_trace_input: torch.Tensor = None,  # type: ignore
     cuda_compile: bool = False,
+    grad_centralization: bool = False,
     cuda_compile_config: dict = {
         "dynamic": False,
         "fullgraph": True,
@@ -130,6 +133,24 @@ def fit(
     def _lr_scheduler_step(scope):
         if lr_scheduler["enable"] and (scope == "batch") == lr_scheduler["batch_mode"]:
             lr_scheduler["scheduler"].step()
+
+    class _GradientCentralizer:
+        def __init__(self, gc_conv_only=False):
+            self.gc_conv_only = gc_conv_only
+            self._compiled_gc = torch.compile(
+                partial(po.centralize_gradient, gc_conv_only=gc_conv_only),
+                dynamic=True,
+                fullgraph=True,
+            ) if device_str == "cuda" else partial(po.centralize_gradient, gc_conv_only=gc_conv_only)
+
+        @torch.no_grad()
+        def apply(self, model):
+            for param in model.parameters():
+                if param.grad is not None:
+                    self._compiled_gc(param.grad)
+
+    if grad_centralization:
+        grad_cent = _GradientCentralizer()
 
     early_stopping = EarlyStopping(
         monitor_name=early_stopping_cnf["monitor"],
@@ -244,6 +265,12 @@ def fit(
                     (fp_idx + 1) % gradient_accumulation_steps == 0
                 ):
                     batch_idx += 1
+
+                    if mixed_precision or grad_centralization:
+                        mpt_scaler.unscale_(optimizer)
+
+                    if grad_centralization:
+                        grad_cent.apply(model)
 
                     if mixed_precision:
                         mpt_scaler.step(optimizer)
