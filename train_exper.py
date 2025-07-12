@@ -167,7 +167,7 @@ def train(exper_args: dict):
         },
         model_trace_input=torch.randn(1, 3 if img_format == "rgb" else 1, *img_res),
         experiment_name=exper_args["exper_name"],
-        grad_centralization=True,
+        grad_centralization=False,
         cuda_compile=True,
         cuda_compile_config={
             "dynamic": False,
