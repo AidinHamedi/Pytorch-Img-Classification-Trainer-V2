@@ -51,7 +51,7 @@ This repository provides a robust and flexible framework for training image clas
 
 ### Prerequisites
 
-*   Python 3.10+
+*   Python 3.11+
 *   PyTorch
 *   Other dependencies listed in `pyproject.toml`
 
@@ -67,7 +67,7 @@ This repository provides a robust and flexible framework for training image clas
     This project uses `uv` for package management.
     ```bash
     pip install uv
-    uv pip install -r requirements.txt
+    uv sync
     ```
 
 ### Dataset Setup
@@ -145,6 +145,15 @@ dataset/
 5.  **`training_eng/train_utils`:** These modules provide utilities for model evaluation and early stopping.
 6.  **`training_eng/core`:** These modules provide core functionalities like device management and callback arguments.
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue.
+
+## 📝 License
+
+<pre>
+ Copyright (c) 2025 Aidin Hamedi
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+</pre>
