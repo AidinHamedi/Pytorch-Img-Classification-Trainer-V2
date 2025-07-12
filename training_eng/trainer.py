@@ -75,6 +75,38 @@ def fit(
     min_training_epochs: int = 2,
     force_cpu: bool = False,
 ):
+    """
+    Trains a PyTorch model with support for various features like early stopping, mixed precision, and logging.
+
+    Args:
+        model (nn.Module): The PyTorch model to be trained.
+        train_dataloader (CallbackWrapper): A wrapper for the training dataloader that allows for dynamic updates.
+        test_dataloader (CallbackWrapper): A wrapper for the testing dataloader.
+        optimizer (torch.optim.Optimizer): The optimizer for training the model.
+        loss_fn (nn.Module): The loss function.
+        max_epochs (int, optional): The maximum number of epochs to train. Defaults to 512.
+        early_stopping_cnf (dict, optional): Configuration for early stopping. Defaults to {"patience": 24, "monitor": "Cohen's Kappa", "mode": "max", "min_delta": 0.00001}.
+        train_eval_portion (float, optional): The portion of training data to use for evaluation. Defaults to 0.1.
+        gradient_accumulation (bool, optional): Whether to use gradient accumulation. Defaults to True.
+        gradient_accumulation_steps (CallbackWrapper, optional): The number of gradient accumulation steps. Defaults to 4.
+        mixed_precision (bool, optional): Whether to use mixed precision training. Defaults to True.
+        mixed_precision_dtype (torch.dtype, optional): The data type for mixed precision. Defaults to torch.bfloat16.
+        lr_scheduler (dict, optional): Configuration for the learning rate scheduler. Defaults to {"scheduler": None, "enable": False, "batch_mode": False}.
+        experiment_name (str, optional): The name of the experiment. Defaults to "!auto".
+        cache_dir (str, optional): The directory to cache intermediate files. Defaults to "./cache".
+        model_export_path (str, optional): The path to save the trained models. Defaults to "./models".
+        tensorboard_logs_path (str, optional): The path to save TensorBoard logs. Defaults to "./logs".
+        model_trace_input (torch.Tensor, optional): An example input for model tracing. Defaults to None.
+        cuda_compile (bool, optional): Whether to compile the model using `torch.compile`. Defaults to False.
+        grad_centralization (bool, optional): Whether to use gradient centralization. Defaults to False.
+        cuda_compile_config (dict, optional): Configuration for `torch.compile`. Defaults to {"dynamic": False, "fullgraph": True, "backend": "inductor"}.
+        log_debugging (bool, optional): Whether to log debugging information. Defaults to True.
+        min_training_epochs (int, optional): The minimum number of epochs to train before saving the model. Defaults to 2.
+        force_cpu (bool, optional): Whether to force CPU usage. Defaults to False.
+
+    Returns:
+        dict: A dictionary containing the best model and the history of metrics.
+    """
     console = Console()
 
     if experiment_name == "!auto":
