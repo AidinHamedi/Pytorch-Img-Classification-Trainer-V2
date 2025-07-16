@@ -76,7 +76,7 @@ This repository provides a robust and flexible framework for training image clas
     uv sync
     ```
 
-    If you want to use turbojpeg
+    If you want to use **turbojpeg**
 
     ```bash
     uv sync --extra tjpeg
