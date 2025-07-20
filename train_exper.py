@@ -18,7 +18,7 @@ eval_data_dir = (
 )
 img_res = (224, 224)  # img loading resolution (for val)
 img_format = "rgb"  # rgb, grayscale
-dl_backend = "opencv"  # pil, opencv or turbojpeg
+dl_backend = "opencv"  # pil, opencv or turbojpeg (for faster data loading)
 dtype = torch.float32  # data type
 auto_split = False  # Auto split dataset (Will auto split the data in "main_data_dir" to Train and Test, Wont use "eval_data_dir")
 split_ratio = 0.8  # Split (Train&Test) ~ auto_split==True
