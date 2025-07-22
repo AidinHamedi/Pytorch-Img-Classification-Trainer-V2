@@ -8,7 +8,7 @@ from torchinfo import summary
 from torchvision.transforms import v2 as v2_transforms
 
 from training_eng.core.callback_arg import CallbackWrapper
-from training_eng.data_utils.data_loader import Torch_ImgDataloader, make_data_pairs
+from training_eng.data_utils.data_loader import ImgLoader, make_data_pairs
 from training_eng.data_utils.data_proc import make_augmentor
 from training_eng.trainer import fit
 
@@ -46,7 +46,7 @@ def train(exper_args: dict):
         print(f" - {key}: {data_pairs['stats'][key]}")
 
     eval_dataloader = DataLoader(
-        dataset=Torch_ImgDataloader(
+        dataset=ImgLoader(
             data_pairs["data_pairs"]["eval"],
             backend=dl_backend,
             color_mode=img_format,
@@ -72,7 +72,7 @@ def train(exper_args: dict):
 
     def gen_train_dataloader(**env_args):
         train_dataloader = DataLoader(
-            dataset=Torch_ImgDataloader(
+            dataset=ImgLoader(
                 data_pairs["data_pairs"]["train"],
                 backend=dl_backend,
                 color_mode=img_format,

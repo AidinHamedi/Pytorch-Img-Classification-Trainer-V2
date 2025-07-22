@@ -226,7 +226,7 @@ def is_supported_file(filename: str, backend: str = "opencv") -> bool:
     return ext in BACKEND_SUPPORT.get(backend, set())
 
 
-class Torch_ImgDataloader(Dataset):
+class ImgLoader(Dataset):
     """
     PyTorch image dataloader with multi-backend support and customizable preprocessing.
 
