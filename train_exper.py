@@ -24,7 +24,7 @@ auto_split = False  # Auto split dataset (Will auto split the data in "main_data
 split_ratio = 0.8  # Split (Train&Test) ~ auto_split==True
 class_weighting_method = "linear"  # class weighting method
 dataLoader_num_workers = 8  # Number of workers for data loading
-debug_model_structure = False
+debug_model_structure = False # Trace and show a summary of the model
 
 
 def train(exper_args: dict):
