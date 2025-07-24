@@ -152,7 +152,7 @@ dataset/
 ## 🧪 How it Works
 
 1. **`run_expers.py`:** This is the main entry point. It reads the `expers.toml` file and iterates through each experiment defined in it.
-2. **`train_exper.py`:** For each experiment, this script sets up the data loaders, model, optimizer, and loss function based on the configuration. It then calls the `fit` function from `training_eng/trainer.py`.
+2. **`train_exper.py`:** For each experiment, this script sets up the data loaders, model, optimizer, and loss function based on the configuration. It then calls the `fit` function from `training_eng/trainer.py`. (can be modified to suit your needs)
 3. **`training_eng/trainer.py`:** This file contains the core `fit` function that implements the training loop. It handles all the complexities of training, including mixed precision, gradient accumulation, early stopping, and logging.
 4. **`training_eng/data_utils`:** These modules handle the creation of data pairs, data loading, and data augmentation.
 5. **`training_eng/train_utils`:** These modules provide utilities for model evaluation and early stopping.
