@@ -169,11 +169,15 @@ def fit(
     class _GradientCentralizer:
         def __init__(self, gc_conv_only=False):
             self.gc_conv_only = gc_conv_only
-            self._compiled_gc = torch.compile(
-                partial(po.centralize_gradient, gc_conv_only=gc_conv_only),
-                dynamic=True,
-                fullgraph=True,
-            ) if device_str == "cuda" else partial(po.centralize_gradient, gc_conv_only=gc_conv_only)
+            self._compiled_gc = (
+                torch.compile(
+                    partial(po.centralize_gradient, gc_conv_only=gc_conv_only),
+                    dynamic=True,
+                    fullgraph=True,
+                )
+                if device_str == "cuda"
+                else partial(po.centralize_gradient, gc_conv_only=gc_conv_only)
+            )
 
         @torch.no_grad()
         def apply(self, model):
@@ -299,10 +303,8 @@ def fit(
                 ):
                     batch_idx += 1
 
-                    if mixed_precision or grad_centralization:
-                        mpt_scaler.unscale_(optimizer)
-
                     if grad_centralization:
+                        mpt_scaler.unscale_(optimizer)
                         grad_cent.apply(model)
 
                     if mixed_precision:
