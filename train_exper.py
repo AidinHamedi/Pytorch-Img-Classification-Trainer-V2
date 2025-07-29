@@ -27,7 +27,7 @@ dataLoader_num_workers = 8  # Number of workers for data loading
 debug_model_structure = False  # Trace and show a summary of the model
 
 
-def train(exper_args: dict):
+def train(exper_args: dict):  # This is an Example function
     print("[bold green]Starting...")
 
     train_batchsize = 64
@@ -123,16 +123,14 @@ def train(exper_args: dict):
             "params": [
                 param
                 for name, param in model.named_parameters()
-                if all(
-                    keyword not in name for keyword in ["bias", "bn", "mixing_ratio"]
-                )
+                if all(keyword not in name for keyword in ["bias", "bn"])
             ]
         },
         {
             "params": [
                 param
                 for name, param in model.named_parameters()
-                if any(keyword in name for keyword in ["bias", "bn", "mixing_ratio"])
+                if any(keyword in name for keyword in ["bias", "bn"])
             ],
             "weight_decay": 0,
         },
@@ -150,7 +148,7 @@ def train(exper_args: dict):
     fit(
         model,
         CallbackWrapper(gen_train_dataloader),
-        CallbackWrapper(lambda x: x, default_value=eval_dataloader, constant=True),
+        CallbackWrapper(lambda _: _, default_value=eval_dataloader, constant=True),
         optimizer,
         loss_fn,
         max_epochs=512,
