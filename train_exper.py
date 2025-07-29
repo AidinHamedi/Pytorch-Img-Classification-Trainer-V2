@@ -24,7 +24,7 @@ auto_split = False  # Auto split dataset (Will auto split the data in "main_data
 split_ratio = 0.8  # Split (Train&Test) ~ auto_split==True
 class_weighting_method = "linear"  # class weighting method
 dataLoader_num_workers = 8  # Number of workers for data loading
-debug_model_structure = False # Trace and show a summary of the model
+debug_model_structure = False  # Trace and show a summary of the model
 
 
 def train(exper_args: dict):
@@ -157,7 +157,9 @@ def train(exper_args: dict):
         mixed_precision=True,
         gradient_accumulation=bool(train_gradient_accumulation),
         gradient_accumulation_steps=CallbackWrapper(
-            lambda **env_args: min(3, int(env_args["epoch"] / 10) + 1), default_value=train_gradient_accumulation, constant=True
+            lambda **env_args: min(3, int(env_args["epoch"] / 10) + 1),
+            default_value=train_gradient_accumulation,
+            constant=False,
         ),
         early_stopping_cnf={
             "patience": 16,
